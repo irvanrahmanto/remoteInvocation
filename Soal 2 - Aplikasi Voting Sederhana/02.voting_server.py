@@ -12,28 +12,25 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/RPC2',)
 
 
-# Buat server
-with SimpleXMLRPCServer(("192.168.43.63", 8008),
-                            requestHandler=RequestHandler, allow_none=True) as server:
-        server.register_introspection_functions()
+# # Buat server local host
+# with SimpleXMLRPCServer(("127.0.0.1", 8008), requestHandler=RequestHandler) as server:
+#     server.register_introspection_functions()
 
-    # with SimpleXMLRPCServer(("192.168.1.16", 6000),
-    #                         requestHandler=RequestHandler, allow_none=True) as server:
-    #     server.register_introspection_functions()
+# Buat server
+with SimpleXMLRPCServer(("172.20.10.2", 8008), requestHandler=RequestHandler) as server:
+    server.register_introspection_functions()
 
     # buat data struktur dictionary untuk menampung nama_kandidat dan hasil voting
     # kandidat = {'candidate_1': 0, 'candidate_2': 0}
-    kandidat = {'candidate_1': 0,
-                'candidate_2': 0
-                }
-    
+    kandidat = {'candidate_1': 0, 'candidate_2': 0}
+
     # kode setelah ini adalah critical section, menambahkan vote tidak boleh terjadi race condition
     # siapkan lock
     lock = threading.Lock()
-    
+
     #  buat fungsi bernama vote_candidate()
     def vote_candidate(nama):
-        
+
         # critical section dimulai harus dilock
         lock.acquire()
         # jika kandidat ada dalam dictionary maka tambahkan  nilai votenya
@@ -49,18 +46,17 @@ with SimpleXMLRPCServer(("192.168.43.63", 8008),
 
         # critical section berakhir, harus diunlock
         lock.release()
-        
-    
+
     # register fungsi vote_candidate() sebagai vote
     server.register_function(vote_candidate, 'vote_candidate')
 
 
-
 # buat fungsi bernama querry_result
+
     def querry_result():
         # critical section dimulai
         lock.acquire()
-        
+
         # hitung total vote yang ada
         total = 0
         for i in kandidat:
@@ -79,10 +75,10 @@ with SimpleXMLRPCServer(("192.168.43.63", 8008),
         # critical section berakhir
         lock.release()
         return msg
-        
+
     # register querry_result sebagai querry
     server.register_function(querry_result, 'lihat')
 
-    print ("Server voting berjalan...")
+    print("Server voting berjalan...")
     # Jalankan server
     server.serve_forever()

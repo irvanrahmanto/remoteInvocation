@@ -7,7 +7,7 @@ PORT = 5004
 
 # buat socket bertipe TCP
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+# s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 # lakukan binding
 s.bind((IP, PORT))
@@ -16,7 +16,8 @@ s.bind((IP, PORT))
 BUFFER_SIZE = 1024
 
 # socket mendengarkan
-s.listen(1)
+# s.listen(1)
+s.listen()
 
 # tampilkan dengan print () "Server berjalan dan melayani HTTP pada port xx"
 print("Server berjalan dan melayani HTTP pada port : ", PORT)
@@ -28,7 +29,7 @@ while True:
     # socket menerima data
     request = conn.recv(BUFFER_SIZE)
     # print data hasil koneksi
-    print("Data diterima :", str(data))
+    print("Data diterima :", str(request))
     # buat response sesuai spesifikasi HTTP untuk diberikan kepada client
     http_response = """\HTTP/1.1 200 OK
 

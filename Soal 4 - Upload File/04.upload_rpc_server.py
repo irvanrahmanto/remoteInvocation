@@ -1,5 +1,6 @@
-# import SimpleXMLRPCServer bagian server
+# gunakan xmlrpc bagian server
 from xmlrpc.server import SimpleXMLRPCServer
+# import xmlrpc.client
 
 # buat fungsi bernama file_upload()
 
@@ -22,6 +23,10 @@ def file_upload(filedata):
 # buat server
 server = SimpleXMLRPCServer(('127.0.0.1', 5003))
 
+# buat server serta register fungsi register_introspection_functions()
+# with SimpleXMLRPCServer(("127.0.0.1", 5003), requestHandler=RequestHandler) as server:
+#     server.register_introspection_functions()
+
 # tulis pesan server telah berjalan
 print("Listening on port 5003")
 
@@ -29,4 +34,4 @@ print("Listening on port 5003")
 server.register_function(file_upload, 'file')
 
 # jalankan server
-server.serve_forever
+server.serve_forever()

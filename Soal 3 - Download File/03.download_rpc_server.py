@@ -23,7 +23,7 @@ server = SimpleXMLRPCServer(('127.0.0.1', 5003))
 print("Listening on port 8001")
 
 # register fungsi download pada server
-server.register_function(file_download, 'file')
+server.register_function(file_download, 'file_download')
 
 # jalankan server
 server.serve_forever()
